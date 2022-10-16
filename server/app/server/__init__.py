@@ -7,6 +7,13 @@ def create_app(test_config=None):
 
     app = Flask(__name__,instance_relative_config=True)
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
+    
+    if test_config is None:
+        #configuration for use when not testing
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
+    else:
+        #setting up config for testing
+        app.config.from_mapping(test_config)
 
     from .models import db
     db.init_app(app)    
