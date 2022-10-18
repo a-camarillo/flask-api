@@ -6,7 +6,6 @@ from server.queries import beers_list, beer_single, brands_list, brand_single
 def create_app(test_config=None):
 
     app = Flask(__name__,instance_relative_config=True)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
     
     if test_config is None:
         #configuration for use when not testing
@@ -14,6 +13,7 @@ def create_app(test_config=None):
     else:
         #setting up config for testing
         app.config.from_mapping(test_config)
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_URI']
 
     from .models import db
     db.init_app(app)    
