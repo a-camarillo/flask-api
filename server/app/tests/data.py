@@ -12,6 +12,7 @@ test_beer_2 = Beer(name='test beer 2',brand='Duff',abv=4)
 def populate_db(db):
     db.session.add(test_brand_1)
     db.session.add(test_brand_2)
+    db.session.commit()
     db.session.add(test_beer_1)
     db.session.add(test_beer_2)
     db.session.commit()
