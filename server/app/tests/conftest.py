@@ -13,7 +13,7 @@ def app():
     app = create_app()
     app.config['TESTING'] = True
 
-    db.init(app)
+    db.init_app(app)
     # creating a new database for the unit test
     with app.app_context():
         db.create_all()
