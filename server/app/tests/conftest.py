@@ -10,8 +10,8 @@ from data import populate_db
 @pytest.fixture()
 def app():
 
-    app = create_app()
-    app.config['TESTING'] = True
+    app = create_app(test_config={'TESTING':True})
+    #app.config['TESTING'] = True
 
     db.init_app(app)
     # creating a new database for the unit test
