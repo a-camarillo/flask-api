@@ -16,7 +16,10 @@ def create_app(test_config=None):
         app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['TEST_URI']
 
     from .models import db
-    db.init_app(app)    
+    db.init_app(app) 
+
+    with app.app_context():
+        db.create_all()   
 
     @app.route('/')
     def hello():
@@ -30,7 +33,7 @@ def create_app(test_config=None):
         beers = beers_list(db)
         return beers
 
-    @app.route('/beers/<int:id>', methods=['GET'])
+    @app.route('/beers/<int:id>/', methods=['GET'])
     def get_beer(id):
         beer = beer_single(db,id)
         return beer
@@ -40,7 +43,7 @@ def create_app(test_config=None):
         brands = brands_list(db)
         return brands
 
-    @app.route('/brands/<int:id>', methods=['GET'])
+    @app.route('/brands/<int:id>/', methods=['GET'])
     def get_brand(id):
         brand = brand_single(db,id)
         return brand
