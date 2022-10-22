@@ -3,7 +3,9 @@ from .models import Beer, Brand
 
 def beers_list(db):
     total_beers = {}
-    beers = db.session.execute(db.select(Beer).order_by(Beer.name)).scalars().all()
+    beers = db.session.execute(
+        db.select(Beer).order_by(Beer.name)
+        ).scalars().all()
     for beer in beers:
         beer_dict = {}
         beer_dict['id'] = beer.id
@@ -15,7 +17,9 @@ def beers_list(db):
     
 def beer_single(db,id):
     beer_dict = {}
-    beer = db.session.execute(db.select(Beer).where(Beer.id==id)).scalar()
+    beer = db.session.execute(
+        db.select(Beer).where(Beer.id==id)
+        ).scalar()
     if beer is None:
         return {'Error': 'A resource with this id does not exist'}
     beer_dict['id'] = beer.id
@@ -26,7 +30,9 @@ def beer_single(db,id):
 
 def brands_list(db):
     total_brands = {}
-    brands = db.session.execute(db.select(Brand).order_by(Brand.name)).scalars().all()
+    brands = db.session.execute(
+        db.select(Brand).order_by(Brand.name)
+        ).scalars().all()
     for brand in brands:
         brand_dict = {}
         brand_dict['id'] = brand.id
@@ -36,7 +42,9 @@ def brands_list(db):
 
 def brand_single(db,id):
     brand_dict = {}
-    brand = db.session.execute(db.select(Brand).where(Brand.id==id)).scalar()
+    brand = db.session.execute(
+        db.select(Brand).where(Brand.id==id)
+        ).scalar()
     brand_dict['id'] = brand.id
     brand_dict['name'] = brand.name
     return brand_dict
