@@ -1,4 +1,4 @@
-python-dotenv
+python-dotenv==0.21.0
 Flask==2.2
 psycopg2==2.9.3
 flask_sqlalchemy==3.0
