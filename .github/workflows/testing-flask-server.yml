@@ -11,11 +11,10 @@ jobs:
       pg-db:
         image: postgres:15.0-alpine
         env:
-           POSTGRES_USER=${{secrets.POSTGRES_USER}}
-           POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}
-           POSTGRES_DB=${{secrets.POSTGRES_DB}}
-           POSTGRES_HOST=${{secrets.POSTGRES_HOST}}
-           POSTGRES_PORT=${{secrets.POSTGRES_PORT}}
+           POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+           POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+           POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+           POSTGRES_HOST: localhost
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -23,30 +22,43 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports:
-          - 5432:${{secrets.POSTGRES_PORT}}
+          - 5432:5432
+      test-db:
+        image: postgres:15.0-alpine
+        env:
+           POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+           POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+           POSTGRES_DB: ${{secrets.TEST_DB}}
+           POSTGRES_HOST: localhost
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5423:5432
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install Python 3.9
-        run: |
-          add-apt-repository ppa:deadsnakes/ppa
-          apt-get update
-          apt-get install python3.9
-
-      - name: Change to server directory
-        run: cd server
+      - name: Install Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
 
       - name: Install python dependencies
         run: |
-          python3.9 -m pip install --upgrade pip
+          cd server
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Change to app flask app directory and test with coverage and pytest
         env:
-          TEST_URI: $${{secrets.TEST_URI}}
+          TEST_URI: ${{secrets.TEST_URI}}
+          DATABASE_URI: ${{secrets.DATABASE_URI}}
         run: |
-          cd app
+          cd server/app
           coverage run -m pytest 
        
         
